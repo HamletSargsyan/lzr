@@ -23,18 +23,19 @@ for command in commands:
 # Основные команды
 @app.command("run")
 def run(file: Annotated[str, typer.Argument()] = ""):
-    with open("project.toml") as f:
-        project_toml = toml.load(f)
-
-    if project_toml.get("lib_file", None) is None:
-        raise NotImplementedError  # TODO
-
     venv = get_venv_path()
     version = venv.get_version()
 
     if file:
         result = lazurite_run("-r", file)
+        print_run_result(result)
     else:
+        with open("project.toml") as f:
+            project_toml = toml.load(f)
+
+        if project_toml.get("lib_file", None) is not None:
+            raise NotImplementedError  # TODO
+
         if compare_versions(version, "2.7.4") >= 0:
             result = lazurite_run("-r")
             print_run_result(result)
@@ -73,7 +74,6 @@ def create(name: str, lib: bool = False):
     file_path.touch()
 
     with open(file_path, "w") as f:
-        print(file_path)
         f.write('println("Hello, world!")\n\n')
 
 

@@ -1,5 +1,5 @@
 import shutil
-from typing import Any
+from typing import Annotated, Any
 
 import toml
 import typer
@@ -20,9 +20,8 @@ app = typer.Typer()
 
 
 @app.command("install")
-def install_lazurite(version: str = "latest"):
+def install_lazurite(version: Annotated[str, typer.Argument()] = "latest"):
     venv_path = get_venv_path()
-    
 
     with Progress(console=console) as progress:
         _task_fetching = progress.add_task("Fetching GitHub", total=100)
@@ -54,7 +53,7 @@ def install_lazurite(version: str = "latest"):
 
         path = venv_path.path / "lazurite" / f"{version}"
         path.mkdir(exist_ok=True)
-        jar_path = venv_path.get_jar_path()
+        jar_path = path / "lazurite.jar"
 
         progress.log(f"Downloading Lazurite JAR from {jar_url} to {jar_path}")
 
@@ -78,7 +77,7 @@ def install_lazurite(version: str = "latest"):
 
 
 @app.command("use")
-def use_lazurite(version: str):
+def use_lazurite(version: Annotated[str, typer.Argument()]):
     if version not in get_release_versions():
         return  # TODO
     typer.echo(f"Using Lazurite version: {version}")
@@ -91,7 +90,7 @@ def use_lazurite(version: str):
 
 
 @app.command("uninstall")
-def uninstall_lazurite(version: str):
+def uninstall_lazurite(version: Annotated[str, typer.Argument()]):
     if version not in get_release_versions():
         raise NotImplementedError  # TODO
 

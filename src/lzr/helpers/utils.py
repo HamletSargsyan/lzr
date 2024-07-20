@@ -102,9 +102,6 @@ def sort_versions(versions: list[str]) -> list[str]:
     )
 
 
-
-
-
 class RunResult(TypedDict):
     stdout: str
     stderr: str
@@ -145,4 +142,3 @@ def print_run_result(result: RunResult):
         print(result["stdout"])
     if result["stderr"]:
         print(result["stderr"])
-

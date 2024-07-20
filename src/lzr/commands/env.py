@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import typer
 
 from helpers.venv import Venv
@@ -10,10 +11,7 @@ app = typer.Typer()
 @app.command("create")
 def create_env():
     typer.echo("Creating environment")
-    venv = Venv()
-
-    if venv.path.exists():
-        raise NotImplementedError  # TODO
+    venv = Venv(Path.cwd())
 
     venv.create()
 
@@ -28,4 +26,7 @@ def activate_env(path: str = f"./{VENV_NAME}"):
 @app.command("deactivate")
 def deactivate_env():
     typer.echo("Deactivating environment")
-    del os.environ[ENV_LAZURITE_VENV_PATH]
+    try:
+        del os.environ[ENV_LAZURITE_VENV_PATH]
+    except KeyError:
+        pass
