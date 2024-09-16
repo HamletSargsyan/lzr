@@ -2,9 +2,9 @@ import os
 
 from cachetools import cached
 import requests
-import toml
 
-from settings import cache, CONFIG_PATH
+from core import Lzr
+from settings import cache
 
 
 class GithubApi:
@@ -20,8 +20,8 @@ class GithubApi:
             "Accept": "application/vnd.github+json",
         }
 
-        with open(CONFIG_PATH, "r") as f:
-            timeout = toml.load(f).get("request", {}).get("timeout", 100)
+        lzr = Lzr()
+        timeout = lzr.config.get("request", "timeout", 100)
 
         gh_token = os.environ.get("GITHUB_TOKEN")
         if gh_token:

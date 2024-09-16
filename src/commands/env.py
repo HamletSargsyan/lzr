@@ -1,32 +1,31 @@
-import os
-from pathlib import Path
 import typer
-
-from helpers.venv import Venv
-from settings import ENV_LAZURITE_VENV_PATH, VENV_NAME
+from core import Lzr
+from helpers.utils import extract_version
+from settings import VERSION_FILE_NAME
 
 app = typer.Typer()
 
 
-@app.command("create")
-def create_env():
-    typer.echo("Creating environment")
-    venv = Venv(Path.cwd())
-
-    venv.create()
-
-
-@app.command("activate")
-def activate_env(path: str = f"./{VENV_NAME}"):
-    typer.echo("Activating environment")
-
-    os.environ[ENV_LAZURITE_VENV_PATH] = path
+@app.command("global")
+def set_global_version(version: str):
+    typer.echo(f"Установка глобальной версии Lazurite: {version}")
+    lzr = Lzr()
+    lzr.config.set("lazurite", "version", extract_version(version))
+    typer.echo(f"Глобальная версия Lazurite установлена: {version}")
 
 
-@app.command("deactivate")
-def deactivate_env():
-    typer.echo("Deactivating environment")
-    try:
-        del os.environ[ENV_LAZURITE_VENV_PATH]
-    except KeyError:
-        pass
+@app.command("local")
+def set_local_version(version: str):
+    typer.echo(f"Установка локальной версии Lazurite: {version}")
+
+    with open(VERSION_FILE_NAME, "w") as f:
+        f.write(version)
+
+    typer.echo(f"Локальная версия Lazurite установлена: {version}")
+
+
+@app.command("version")
+def show_version():
+    lzr = Lzr()
+    version = lzr.get_lazurite_version()
+    typer.echo(f"Текущая версия Lazurite: {version}")

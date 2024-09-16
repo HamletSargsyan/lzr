@@ -1,6 +1,7 @@
 {
-    "python.analysis.extraPaths": ["src/lzr"],
+    "python.analysis.extraPaths": ["src/"],
     "cSpell.words": [
+        "cachetools",
         "typer"
     ]
 }

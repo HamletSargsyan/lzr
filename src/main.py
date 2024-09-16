@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 
+from rich.pager import SystemPager
 import toml
 from typing_extensions import Annotated
 import typer
@@ -8,12 +9,11 @@ import typer
 from commands import commands
 from helpers.utils import (
     compare_versions,
-    get_venv_path,
     lazurite_run,
     print_run_result,
 )
-from helpers.venv import Venv
-
+from core import Lzr
+from settings import console
 
 app = typer.Typer()
 for command in commands:
@@ -23,8 +23,8 @@ for command in commands:
 # Основные команды
 @app.command("run")
 def run(file: Annotated[str, typer.Argument()] = ""):
-    venv = get_venv_path()
-    version = venv.get_version()
+    lzr = Lzr()
+    version = lzr.get_lazurite_version()
 
     if file:
         result = lazurite_run("-r", file)
@@ -76,11 +76,18 @@ def create(name: str, lib: bool = False):
     with open(file_path, "w") as f:
         f.write('println("Hello, world!")\n\n')
 
+@app.command()
+def versions():
+    lzr = Lzr()
+
+
+    for version in lzr.get_all_versions():
+        _prefix = ""
+        if version == lzr.get_lazurite_version():
+            _prefix = "(current)"
+        print(f"{version} {_prefix}")
 
 def main():
-    venv = Venv()
-    venv.create()
-
     app()
 
 

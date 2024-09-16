@@ -11,7 +11,7 @@ class Config:
 
     def create(self):
         if self.file_path.exists():
-            return
+            return self
 
         base_config = {
             "request": {
@@ -21,6 +21,7 @@ class Config:
 
         with open(self.file_path, "w") as f:
             toml.dump(base_config, f)
+        return self
 
     def get(self, table: str, key: str, default: Any = None):
         if not self.file_path.exists():

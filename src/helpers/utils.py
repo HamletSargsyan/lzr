@@ -1,26 +1,16 @@
-import os
 import re
-from pathlib import Path
 import subprocess
 from typing import Any, TypedDict
 
 from cachetools import cached
-from helpers.venv import Venv
 from settings import (
     cache,
-    ENV_LAZURITE_VENV_PATH,
 )
-from helpers.api import LazuriteGithubApi
+from api import LazuriteGithubApi
+from core import Lzr
 
 
 VERSION_PATTERN = re.compile(r"(\d+\.\d+(\.\d+)?)")
-
-
-def get_venv_path():
-    venv_path = os.environ.get(ENV_LAZURITE_VENV_PATH)
-    if venv_path and Path(venv_path).exists():
-        return Venv(Path(venv_path)).create()
-    raise  # TODO
 
 
 @cached(cache)
@@ -105,9 +95,9 @@ class RunResult(TypedDict):
 
 
 def lazurite_run(*args: str) -> RunResult:
-    venv = get_venv_path()
-    version = venv.get_version()
-    jar_path = venv.get_jar_path()
+    lzr = Lzr()
+    version = lzr.get_lazurite_version()
+    jar_path = lzr.get_jar_path()
 
     if compare_versions(version, "2.7.4") >= 0:
         result = subprocess.run(
