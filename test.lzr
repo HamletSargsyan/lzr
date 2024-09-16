@@ -1,1 +1,8 @@
-println("Hello world")
+using "lzr.lang.system"
+
+print("Lazurite version: ")
+println(system.getProperty("lzr.version"))
+
+print("Java version: ")
+println(system.getProperty("java.version"))
+

@@ -23,7 +23,7 @@ class GithubApi:
         with open(CONFIG_PATH, "r") as f:
             timeout = toml.load(f).get("request", {}).get("timeout", 100)
 
-        gh_token = os.environ.get("GITHUB_TOKEN", None)
+        gh_token = os.environ.get("GITHUB_TOKEN")
         if gh_token:
             headers["Authorization"] = f"Bearer {gh_token}"
         return requests.get(
@@ -44,6 +44,6 @@ class LazuriteGithubApi(GithubApi):
         super().__init__("ArtyomKingmang", "Lazurite")
 
 
-class SelfGithubApi(GithubApi):
+class LzrGithubApi(GithubApi):
     def __init__(self) -> None:
         super().__init__("HamletSargsyan", "lzr")

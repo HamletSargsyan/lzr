@@ -55,12 +55,12 @@ def create(name: str, lib: bool = False):
         return  # TODO
 
     path.mkdir()
-    project_toml_content = {"project": {"name": name, "version": "0.1.0"}}
+    project_toml_content = {"package": {"name": name, "version": "0.1.0"}}
 
     if lib:
-        project_toml_content["project"]["lib_file"] = "src/lib.lzr"
+        project_toml_content["package"]["lib_file"] = "src/lib.lzr"
     else:
-        project_toml_content["project"]["run_file"] = "src/main.lzr"
+        project_toml_content["package"]["run_file"] = "src/main.lzr"
 
     project_toml_path = path / "project.toml"
     project_toml_path.touch()

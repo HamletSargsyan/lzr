@@ -9,9 +9,8 @@ from helpers.venv import Venv
 from settings import (
     cache,
     ENV_LAZURITE_VENV_PATH,
-    DEFAULT_LAZURITE_VENV_PATH,
 )
-from helpers.github_api import LazuriteGithubApi
+from helpers.api import LazuriteGithubApi
 
 
 VERSION_PATTERN = re.compile(r"(\d+\.\d+(\.\d+)?)")
@@ -21,8 +20,6 @@ def get_venv_path():
     venv_path = os.environ.get(ENV_LAZURITE_VENV_PATH)
     if venv_path and Path(venv_path).exists():
         return Venv(Path(venv_path)).create()
-    elif Path(DEFAULT_LAZURITE_VENV_PATH).exists():
-        return Venv().create()
     raise  # TODO
 
 
