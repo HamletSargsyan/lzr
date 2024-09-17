@@ -4,6 +4,7 @@ import typer
 import requests
 from rich.progress import Progress
 
+from api import LazuriteGithubApi
 from core import Lzr
 from settings import console
 from helpers.utils import (
@@ -30,7 +31,7 @@ def install_lazurite(version: Annotated[str, typer.Argument()] = "latest"):
             release.raise_for_status()
             release_data = release.json()
             progress.update(task_fetching, advance=100)
-            progress.console.log("Готово")
+
 
             version = get_version_from_release(release_data)
             jar_url = next(
@@ -49,8 +50,6 @@ def install_lazurite(version: Annotated[str, typer.Argument()] = "latest"):
             path = lzr.path / "lazurite" / version
             path.mkdir(parents=True, exist_ok=True)
             jar_path = path / "lazurite.jar"
-
-            progress.log(f"Скачивание Lazurite JAR с {jar_url} в {jar_path}")
 
             response = requests.get(jar_url, stream=True)
             total_length = int(response.headers.get("content-length", 0))
@@ -94,3 +93,13 @@ def lazurite_version():
     result = lazurite_run("-v")
     version = extract_version(result["stdout"])
     typer.echo(version)
+
+
+@app.command("available")
+def lazurite_available():
+    api = LazuriteGithubApi()
+
+    releases = api.get_all_releases().json()
+
+    for release in releases:
+        print(extract_version(release["tag_name"]))

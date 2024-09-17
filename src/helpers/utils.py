@@ -23,6 +23,8 @@ def get_version_from_release(release: dict[str, Any]):
     version = extract_version(release["tag_name"])
     if not version:
         version = extract_version(release["name"])
+    if not version:
+        raise # TODO
     return version
 
 
