@@ -1,7 +1,6 @@
 import re
 from pathlib import Path
 
-from rich.pager import SystemPager
 import toml
 from typing_extensions import Annotated
 import typer
@@ -13,7 +12,6 @@ from helpers.utils import (
     print_run_result,
 )
 from core import Lzr
-from settings import console
 
 app = typer.Typer()
 for command in commands:
